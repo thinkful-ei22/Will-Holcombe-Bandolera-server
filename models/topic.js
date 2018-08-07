@@ -1,14 +1,12 @@
 'use strict';
 var mongoose = require ('mongoose');
 
-const snippetSchema = new mongoose.Schema({
+const topicSchema = new mongoose.Schema({
     
   title:{
     type: String,
-    //required: true
+    required: true
   },
-  content: String,
-  subtopicId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subtopic', required: true  },
   
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true  }
 
@@ -16,10 +14,10 @@ const snippetSchema = new mongoose.Schema({
 
 
 
-snippetSchema.set('timestamps', true);
+topicSchema.set('timestamps', true);
 
 // Customize output for `res.json(data)`, `console.log(data)` etc.
-snippetSchema.set('toObject', {
+topicSchema.set('toObject', {
   virtuals:  true,     // include built-in virtual `id`
   versionKey: false,  // remove `__v` version key
   transform: (doc, ret) => {
@@ -27,4 +25,4 @@ snippetSchema.set('toObject', {
   }
 });
 
-module.exports = mongoose.model('Snippets', snippetSchema);
+module.exports = mongoose.model('Snippets', topicSchema);
