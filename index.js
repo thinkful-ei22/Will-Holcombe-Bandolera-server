@@ -22,6 +22,13 @@ app.use(
   })
 );
 
+
+app.get('/subjects', (req, res) =>{ 
+res.json([
+  'Code 1'
+]);
+});
+
 function runServer(port = PORT) {
   const server = app
     .listen(port, () => {
