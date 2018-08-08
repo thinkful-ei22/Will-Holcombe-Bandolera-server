@@ -26,4 +26,4 @@ subtopicSchema.set('toObject', {
   }
 });
 
-module.exports = mongoose.model('Snippets', subtopicSchema);
+module.exports = mongoose.model('Subtopics', subtopicSchema);

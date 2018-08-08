@@ -25,4 +25,4 @@ topicSchema.set('toObject', {
   }
 });
 
-module.exports = mongoose.model('Snippets', topicSchema);
+module.exports = mongoose.model('Topics', topicSchema);

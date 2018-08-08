@@ -2,7 +2,7 @@
 //const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 //mongoose.Promise = global.Promise;
- const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const UserSchema =new mongoose.Schema({
   fullName:{ type: String}, //no default: '' ?
@@ -10,7 +10,10 @@ const UserSchema =new mongoose.Schema({
     required: true, 
     unique: true },
   password:{ type: String,
-    required: true}
+    required: true},
+  snippets: [{ type: mongoose.Schema.Types.ObjectId,
+    //note: caps
+    model: 'Snippet'}]
 
 });
 // Like the previous challenges, we'll use the mongoose transform
