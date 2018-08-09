@@ -1,7 +1,7 @@
 'use strict';
-//const bcrypt = require('bcryptjs');
+
 const mongoose = require('mongoose');
-//mongoose.Promise = global.Promise;
+
 const bcrypt = require('bcryptjs');
 
 const UserSchema =new mongoose.Schema({
@@ -11,9 +11,7 @@ const UserSchema =new mongoose.Schema({
     unique: true },
   password:{ type: String,
     required: true},
-  snippets: [{ type: mongoose.Schema.Types.ObjectId,
-    //note: caps
-    model: 'Snippet'}]
+
 
 });
 // Like the previous challenges, we'll use the mongoose transform
@@ -42,6 +40,5 @@ UserSchema.statics.hashPassword = function (password) {
 };
 
 
-const User = mongoose.model('User', UserSchema);
+module.exports =  mongoose.model('User', UserSchema);
 
-module.exports =  {User} ;

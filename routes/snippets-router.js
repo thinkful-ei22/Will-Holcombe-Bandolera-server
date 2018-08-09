@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const Snippet = require('../models/snippet');
 const Subtopic = require('../models/subtopic');
-const Tag = require('../models/tag');
+
 const passport =  require('passport');
 
 

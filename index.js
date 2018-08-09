@@ -2,11 +2,11 @@
 
 const express = require('express');
 const cors = require('cors');
-
+const morgan = require('morgan');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-// const {dbConnect} = require('./db-knex');
+
 
 const app = express();
 const snippetsRouter = require('./routes/snippets-router');
@@ -15,17 +15,17 @@ const topicsRouter = require('./routes/topics-router');
 const usersRouter = require('./routes/users-router');
 const authRouter = require('./routes/auth');
 
-// const passport = require('passport');
-// const localStrategy = require('./passport/local');
-// const jwtStrategy = require('./passport/jwt');
-// passport.use(localStrategy);
-// passport.use(jwtStrategy);
+const passport = require('passport');
+const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
-// app.use(
-//   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
-//     skip: (req, res) => process.env.NODE_ENV === 'test'
-//   })
-// );
+app.use(
+  morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
+    skip: (req, res) => process.env.NODE_ENV === 'test'
+  })
+);
 
 app.use(express.static('public'));
 app.use(express.json());
@@ -37,9 +37,9 @@ app.use(
 );
 
 
-app.get('/', (req, res) => {
-  res.send('Hello');
-});
+// app.post('/api/login', (req, res) => {
+//   res.send('Hello');
+// });
 
 
 app.use('/api/snippets', snippetsRouter);
@@ -47,6 +47,7 @@ app.use('/api/topics', topicsRouter);
 app.use('/api/subtopics', subtopicsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', authRouter);
+
 
 
 
