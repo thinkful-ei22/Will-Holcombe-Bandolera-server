@@ -8,9 +8,9 @@ module.exports = {
  
   MONGODB_URI:
         process.env.DATABASE_URL || 'mongodb://WebUser:shadow1@ds215502.mlab.com:15502/snippets',
-  TEST_DATABASE_URL:
+  TEST_MONGODB_URI:
         process.env.TEST_DATABASE_URL ||
-        'mongodb://localhost/thinkful-backend-test',
+        'mongodb://WebUser:shadow1@ds119640.mlab.com:19640/bandolera_test',
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRY: process.env.JWT_EXPIRY || '7d'
 };

@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const Subtopic = require('../models/subtopic');
 //const Snippet = require('../models/snippet');
 const Topic = require('../models/topic');
+const Snippet = require('../models/snippet');
 
 const router = express.Router();
 const passport =  require('passport');
@@ -18,7 +19,9 @@ router.get('/', (req, res, next) => {
   Topic.find({userId})
     .sort('title')
     .then(results => {
+      console.log(results);
       res.json(results);
+      
     })
     .catch(err => {
       next(err);
@@ -78,6 +81,7 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
+ 
   const { title } = req.body;
   const { userId } = req.user;
 
@@ -95,8 +99,9 @@ router.put('/:id', (req, res, next) => {
   }
 
   const updateTopic = { title };
+  //console.log(updateTopic);
 
-  Subtopic.findByIdAndUpdate({_id: id, userId}, updateTopic, { new: true })
+  Topic.findByIdAndUpdate({_id: id, userId}, updateTopic, { new: true })
     .then(result => {
       if (result) {
         res.json(result);
@@ -124,14 +129,35 @@ router.delete('/:id', (req, res, next) => {
     return next(err);
   }
 
-  const topicRemovePromise = Topic.findByIdAndRemove({_id: id, userId});
+  //const topicRemovePromise = Topic.findByIdAndRemove({_id: id, userId});
 
-  const subtopicRemovePromise = Subtopic.updateMany(
-    { topicId: id },
-    { $unset: { topicId: '' } }
-  );
-
-  Promise.all([topicRemovePromise, subtopicRemovePromise])
+  //let snippetsUnderTopicToDelete = [];
+  // {$in: subtopicsId }
+  
+  Subtopic.find({ topicId: id }, userId)
+    .then( subtopics => subtopics.map( subtopic => {
+      //console.log(subtopic.id);
+      return subtopic.id;
+    }))
+    .then(subtopicIds => { 
+      
+      //console.log({subtopicsId : {$in: subtopicId }});
+      //console.log(subtopicIds);
+      const promises = subtopicIds.map(subtopicId => {
+        return  Snippet.deleteMany({subtopicId  });
+      });
+      return Promise.all(promises);
+    })
+    .then(()=> 
+      Subtopic.deleteMany(
+        { topicId: id },
+        userId
+      ))
+    .then(() =>   
+      Topic.deleteOne(
+        {_id: id},
+        userId
+      ))
     .then(() => {
       res.sendStatus(204);
     })
@@ -140,4 +166,41 @@ router.delete('/:id', (req, res, next) => {
     });
 });
 
+
+// const subtopicRemovePromise = Subtopic.deleteMany(
+//   { topicId: id },
+//   userId
+// );
+
+// const deleteTopic = Topic.deleteOne(
+//   {_id: id},
+//   userId
+// );
+
+// Promise.all([ subtopicRemovePromise, snippetsUnderTopicToDelete, deleteTopic])
+  
 module.exports = router;
+
+
+
+
+
+// const subtopicRemovePromise = Subtopic.findByIdAndRemove({_id: id, userId});
+
+// // const snippetRemovePromise = Snippet.updateMany(
+// //   { subtopicId: id },
+// //   { $unset: { subtopicId: '' } }
+// // );
+// const snippetRemovePromise = Snippet.deleteMany(
+//   { subtopicId: id }, userId
+// );
+
+
+// Promise.all([subtopicRemovePromise, snippetRemovePromise])
+//   .then(() => {
+//     res.sendStatus(204);
+//   })
+//   .catch(err => {
+//     next(err);
+//   });
+// });

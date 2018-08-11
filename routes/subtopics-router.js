@@ -50,12 +50,13 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-  const { title } = req.body;
+  const { title, topicId } = req.body;
   const  userId  = req.user.id;
-  const newSubtopic = { title, userId };
+  const newSubtopic = { title, userId, topicId };
+  console.log(newSubtopic);
  
   /***** Never trust users - validate input *****/
-  if (!name) {
+  if (!title) {
     const err = new Error('Missing `title` in request body');
     err.status = 400;
     return next(err);
@@ -77,7 +78,7 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { title, topicId } = req.body;
   const { userId } = req.user;
 
   /***** Never trust users - validate input *****/
@@ -93,7 +94,7 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
-  const updateSubtopic = { title };
+  const updateSubtopic = { title, topicId };
 
   Subtopic.findByIdAndUpdate({_id: id, userId}, updateSubtopic, { new: true })
     .then(result => {
@@ -123,12 +124,22 @@ router.delete('/:id', (req, res, next) => {
     return next(err);
   }
 
+
+
+
+
+
+  
   const subtopicRemovePromise = Subtopic.findByIdAndRemove({_id: id, userId});
 
-  const snippetRemovePromise = Snippet.updateMany(
-    { subtopicId: id },
-    { $unset: { subtopicId: '' } }
+  // const snippetRemovePromise = Snippet.updateMany(
+  //   { subtopicId: id },
+  //   { $unset: { subtopicId: '' } }
+  // );
+  const snippetRemovePromise = Snippet.deleteMany(
+    { subtopicId: id }, userId
   );
+
 
   Promise.all([subtopicRemovePromise, snippetRemovePromise])
     .then(() => {

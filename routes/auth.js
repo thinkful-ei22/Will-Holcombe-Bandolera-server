@@ -28,8 +28,8 @@ function createAuthToken (user) {
 
 router.post('/', localAuth, function (req, res) {
   console.log('auth post endpoint reached');
- //const authToken = createAuthToken(req.user);
- // res.json({ authToken });
+ const authToken = createAuthToken(req.user);
+  res.json({ authToken });
   console.log(req.body);
   console.log(req.user);
   res.json('Hello');

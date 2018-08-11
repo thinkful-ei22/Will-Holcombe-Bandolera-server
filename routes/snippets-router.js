@@ -26,8 +26,10 @@ router.get('/', (req, res, next) => {
   
   const { subtopicId } = req.query;
   
-  let filter = { userId, subtopicId };//not _id: userId etc.
-    
+  let filter = { userId };//not _id: userId etc.
+  if (subtopicId) {
+    filter.subTopicId = subtopicId; 
+  }
 
   
   // if (tagId) {

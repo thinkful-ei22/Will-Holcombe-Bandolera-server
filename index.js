@@ -6,7 +6,8 @@ const morgan = require('morgan');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-
+const mongoose = require('mongoose');
+const { MONGODB_URI } = require('./config');
 
 const app = express();
 const snippetsRouter = require('./routes/snippets-router');
@@ -73,21 +74,65 @@ app.use((err, req, res, next) => {
 });
 
 
+let server;
 
-function runServer(port = PORT) {
-  const server = app
-    .listen(port, () => {
-      console.info(`App listening on port ${server.address().port}`);
-    })
-    .on('error', err => {
-      console.error('Express failed to start');
-      console.error(err);
+function runServer(MONGODB_URI, port = PORT) {
+
+  return new Promise((resolve, reject) => {
+    mongoose.connect(MONGODB_URI, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+        .on('error', err => {
+          mongoose.disconnect();
+          reject(err);
+        });
     });
+  });
+}
+
+function closeServer() {
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log('Closing server');
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  });
 }
 
 if (require.main === module) {
-  dbConnect();
-  runServer();
+  runServer(MONGODB_URI).catch(err => console.error(err));
 }
 
-module.exports = { app };
+module.exports = { app, runServer, closeServer };
+
+
+
+
+
+// function runServer(port = PORT) {
+//   const server = app
+//     .listen(port, () => {
+//       console.info(`App listening on port ${server.address().port}`);
+//     })
+//     .on('error', err => {
+//       console.error('Express failed to start');
+//       console.error(err);
+//     });
+// }
+
+// if (require.main === module) {
+//   dbConnect();
+//   runServer();
+// }
+
+// module.exports = { app };
