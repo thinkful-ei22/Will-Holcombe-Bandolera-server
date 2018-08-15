@@ -47,7 +47,7 @@ app.use('/api/snippets', snippetsRouter);
 app.use('/api/topics', topicsRouter);
 app.use('/api/subtopics', subtopicsRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/login', authRouter);
+app.use('/api/', authRouter);
 
 
 
