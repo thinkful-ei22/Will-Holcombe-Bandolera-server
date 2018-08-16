@@ -77,10 +77,10 @@ router.get('/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
   //tags default to empty if no value passed in
-  const { title, content } = req.body;
+  const { title, image } = req.body;
   const userId = req.user.id;
   const subtopicId = req.body.subtopicId ? req.body.subtopicId : undefined;
-  const newSnippet = { title, content, subtopicId, userId };
+  const newSnippet = { title, image, subtopicId, userId };
   // For folders, verify the folderId is a valid ObjectId and the item belongs to 
   // the current user. If the validation fails, then return an 
   // error message 'The folderId is not valid' with status 400.

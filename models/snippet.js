@@ -7,7 +7,8 @@ const snippetSchema = new mongoose.Schema({
     type: String,
     //required: true
   },
-  content: String,
+  //should image be specific for link?
+  image: String,
   subtopicId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subtopic', required: true  },
   
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true  }
