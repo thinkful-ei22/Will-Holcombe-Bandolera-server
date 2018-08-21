@@ -11,6 +11,15 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 
+
+const bodyParser = require('body-parser');
+
+
+const config = require('../config');
+
+
+
+
 const options = {session: false, failWithError: true};
 
 const localAuth = passport.authenticate('local', options);
@@ -26,13 +35,16 @@ function createAuthToken (user) {
   });
 }
 
-router.post('/', localAuth, function (req, res) {
-  console.log('auth post endpoint reached');
- const authToken = createAuthToken(req.user);
+
+router.use(bodyParser.json());
+
+router.post('/login', localAuth, function (req, res) {
+  //console.log('auth post endpoint reached');
+  const authToken = createAuthToken(req.user);
   res.json({ authToken });
-  console.log(req.body);
-  console.log(req.user);
-  res.json('Hello');
+  // console.log(req.body);
+  //console.log(req.user);
+ 
 });
 
 const jwtAuth = passport.authenticate('jwt', { session: false, failWithError: true });
