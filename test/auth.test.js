@@ -49,7 +49,7 @@ describe('Bandolera API - Login', function () {
   describe('Noteful /api/login', function () {
     it('Should return a valid auth token', function () {
       return chai.request(app)
-        .post('/api/login')
+        .post('/api/')
         .send({ username, password })
         .then(res => {
           expect(res).to.have.status(200);

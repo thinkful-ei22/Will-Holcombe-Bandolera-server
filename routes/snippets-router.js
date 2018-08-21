@@ -122,7 +122,7 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
-  const { title, content, subtopicId } = req.body;
+  const { image, content, subtopicId } = req.body;
   const userId = req.user.id;
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -144,7 +144,7 @@ router.put('/:id', (req, res, next) => {
   }
   
   
-  const updateNote = { title, content, subtopicId };
+  const updateNote = { image, content, subtopicId };
   
   Snippet.findByIdAndUpdate({ _id: id, userId }, updateNote, { new: true })
     .then(result => {

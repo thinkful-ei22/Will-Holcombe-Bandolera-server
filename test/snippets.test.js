@@ -102,10 +102,10 @@ describe('Bandolera API --Snippets', function () {
           res.body.forEach(function (item, i) {
             expect(item).to.be.a('object');
             // Note: folderId and content are optional
-            expect(item).to.include.all.keys('id', 'title', 'content', 'createdAt', 'updatedAt', 'subtopicId', 'userId');
+            expect(item).to.include.all.keys('id', 'title', 'image', 'createdAt', 'updatedAt', 'subtopicId', 'userId');
             expect(item.id).to.equal(data[i].id);
             expect(item.title).to.equal(data[i].title);
-            expect(item.content).to.equal(data[i].content);
+            expect(item.image).to.equal(data[i].image);
             expect(item.userId).to.equal(data[i].userId.toHexString());
             expect(new Date(item.createdAt)).to.eql(data[i].createdAt);
             expect(new Date(item.updatedAt)).to.eql(data[i].updatedAt);
@@ -152,10 +152,10 @@ describe('Bandolera API --Snippets', function () {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.all.keys('id', 'title', 'content', 'createdAt', 'updatedAt', 'subtopicId', 'userId');
+          expect(res.body).to.have.all.keys('id', 'title', 'image', 'createdAt', 'updatedAt', 'subtopicId', 'userId');
           expect(res.body.id).to.equal(data.id);
           expect(res.body.title).to.equal(data.title);
-          expect(res.body.content).to.equal(data.content);
+          expect(res.body.image).to.equal(data.image);
           expect(res.body.userId).to.equal(data.userId.toHexString());
           expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
           expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
@@ -190,7 +190,7 @@ describe('Bandolera API --Snippets', function () {
       const newItem = {
         title: 'The best article about cats ever!',
         subtopicId: '111111111111111111111101',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...'
+        image: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...'
       };
       let res;
 
@@ -204,13 +204,13 @@ describe('Bandolera API --Snippets', function () {
           expect(res).to.have.header('location');
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          expect(res.body).to.have.all.keys('id', 'title', 'content', 'createdAt', 'updatedAt', 'subtopicId', 'userId');
+          expect(res.body).to.have.all.keys('id', 'title', 'image', 'createdAt', 'updatedAt', 'subtopicId', 'userId');
           return Snippet.findOne({ _id: res.body.id, userId: user.id });
         })
         .then(data => {
           expect(res.body.id).to.equal(data.id);
           expect(res.body.title).to.equal(data.title);
-          expect(res.body.content).to.equal(data.content);
+          expect(res.body.image).to.equal(data.image);
           expect(res.body.userId).to.equal(data.userId.toHexString());
           expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
           expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
@@ -219,7 +219,7 @@ describe('Bandolera API --Snippets', function () {
 
     it('should return an error when missing "title" field', function () {
       const newItem = {
-        content: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
+        image : 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
       };
       return chai.request(app)
         .post('/api/snippets')
@@ -236,7 +236,7 @@ describe('Bandolera API --Snippets', function () {
     it('should return an error when `folderId` is not valid ', function () {
       const newItem = {
         title: 'What about dogs?!',
-        content: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...',
+        image: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...',
         folderId: 'NOT-A-VALID-ID'
       };
       return chai.request(app)
@@ -254,12 +254,12 @@ describe('Bandolera API --Snippets', function () {
 
   });
 
-  describe('PUT /api/notes/:id', function () {
+  describe('PUT /api/snippets/:id', function () {
 
-    it('should update the note when provided valid data', function () {
+    it('should update the snippet when provided valid data', function () {
       const updateItem = {
         title: 'What about dogs?!',
-        content: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
+        image: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
       };
       let data;
       return Snippet.findOne({ userId: user.id })
@@ -274,10 +274,10 @@ describe('Bandolera API --Snippets', function () {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          expect(res.body).to.have.all.keys('id', 'title', 'content', 'createdAt', 'updatedAt', 'subtopicId', 'userId');
+          expect(res.body).to.have.all.keys('id', 'title', 'image', 'createdAt', 'updatedAt', 'subtopicId', 'userId');
           expect(res.body.id).to.equal(data.id);
           expect(res.body.title).to.equal(updateItem.title);
-          expect(res.body.content).to.equal(updateItem.content);
+          expect(res.body.image).to.equal(updateItem.image);
           expect(res.body.userId).to.equal(data.userId.toHexString());
           expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
           // expect note to have been updated
@@ -288,7 +288,7 @@ describe('Bandolera API --Snippets', function () {
     it('should respond with status 400 and an error message when `id` is not valid', function () {
       const updateItem = {
         title: 'What about dogs?!',
-        content: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
+        image: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
       };
       return chai.request(app)
         .put('/api/snippets/NOT-A-VALID-ID')
@@ -304,7 +304,7 @@ describe('Bandolera API --Snippets', function () {
       // The string "DOESNOTEXIST" is 12 bytes which is a valid Mongo ObjectId
       const updateItem = {
         title: 'What about dogs?!',
-        content: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
+        image: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
       };
       return chai.request(app)
         .put('/api/snippets/DOESNOTEXIST')
