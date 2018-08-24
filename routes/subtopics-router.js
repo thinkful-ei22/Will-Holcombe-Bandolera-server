@@ -9,6 +9,11 @@ const Snippet = require('../models/snippet');
 const router = express.Router();
 const passport =  require('passport');
 
+const bodyParser = require('body-parser');
+
+const jsonParser = bodyParser.json();
+
+
 /* ========== GET/READ ALL ITEMS ========== */
 router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
 
@@ -49,7 +54,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 /* ========== POST/CREATE AN ITEM ========== */
-router.post('/', (req, res, next) => {
+router.post('/', jsonParser, (req, res, next) => {
   const { title, topicId } = req.body;
   const  userId  = req.user.id;
   const newSubtopic = { title, userId, topicId };

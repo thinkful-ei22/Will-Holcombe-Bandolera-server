@@ -8,6 +8,7 @@ const subtopicSchema = new mongoose.Schema({
     required: true,
     unque: true
   },
+  
 
   topicId: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic', required: false  },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false  }
